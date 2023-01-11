@@ -1,3 +1,5 @@
+@use './partials/variables' as *;
+
 *,
 ::before,
 ::after{
@@ -14,4 +16,12 @@ body{
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 1rem;
+}
+
+//button
+button{
+    border: 2px solid $main-button-border;
+    background-color: $main-button-bg;
+    color:white;
+    padding: .5rem 1rem;
 }
