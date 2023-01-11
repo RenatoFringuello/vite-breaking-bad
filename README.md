@@ -8,5 +8,6 @@ This template should help get you started developing with Vue 3 in Vite. The tem
 
 
 EDIT: Mi sono fatto prendere la mano e ho aggiunto:
--I button next e prev per mostrare le carte con offset = 25 * nPage
--il filtro per archetipo (di quelle mostrate; ad ogni cambio pagina vengono aggiornati i valori degli option in base alle carte caricate)
+
+- I button next e prev per mostrare le carte con offset = 25 * nPage
+- Il filtro per archetipo (di quelle mostrate; ad ogni cambio pagina vengono aggiornati i valori degli option in base alle carte caricate)
