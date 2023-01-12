@@ -28,11 +28,6 @@
 <style lang="scss" scoped>
     @use '../style/partials/variables' as *;
 
-    h4{
-        background-color: $card-found-bg;
-        color: white;
-        padding: 1.2rem;
-    }
     .cards-container{
         display: flex;
         flex-wrap: wrap;

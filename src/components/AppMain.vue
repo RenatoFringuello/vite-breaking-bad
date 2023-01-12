@@ -8,6 +8,7 @@
         },
         props:{
             nCardFound:Number,
+            nPage:Number,
         },
         data() {
             return {
@@ -25,6 +26,11 @@
                 <select v-model="archetypeSelected" @change="$emit('filterData', archetypeSelected)">
                     <option v-for="archetype,i in archetypes" :value="(i===0) ? undefined : archetype">{{ archetype }}</option>
                 </select>
+                <div class="set-page-container">
+                    <button @click="$emit('changePage', -1)">Prev</button>
+                    <h4>{{nPage}}</h4>
+                    <button @click="$emit('changePage', 1)">Next</button>
+                </div>
             </div>
             <section>
                 <h4>Found {{ nCardFound }} cards</h4>
@@ -52,10 +58,27 @@
                 width: 150px;
                 padding: .5rem;
             }
+            .set-page-container{
+                display: flex;
+                align-items: center;
+                *{
+                    margin-left:1rem;
+                }
+                h4{
+                    text-align: center;
+                    width: 50px;
+                }
+            }
         }
         section{
             background-color: white;
             padding: 3rem 3rem 2rem;
+
+            h4{
+                background-color: $card-found-bg;
+                color: white;
+                padding: 1.2rem;
+            }
         }
     }
 </style>
