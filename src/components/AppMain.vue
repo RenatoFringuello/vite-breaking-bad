@@ -11,8 +11,10 @@
         data() {
             return {
                 store,
+                apiUrl : 'https://db.ygoprodeck.com/api/v7/cardinfo.php',
                 nPage:0,
                 nPageToGet:25,
+                nMaxPage : 0,
                 nCardFound : 0,
                 archetypes:['-- All --', '-- No Archetype --'],
                 archetypeSelected:'',
@@ -20,8 +22,15 @@
         },
         methods: {
             getData(){
-                axios.get(`https://db.ygoprodeck.com/api/v7/cardinfo.php?num=${this.nPageToGet}&offset=${this.nPage * this.nPageToGet}`)
-                     .then((response)=>{
+                axios.get(this.apiUrl,{
+                        params:{
+                            sort:'name',
+                            num:this.nPageToGet,
+                            offset:this.nPageToGet * this.nPage
+                        }
+                    })
+                    .then((response)=>{
+                        this.nMaxPage = Math.floor(response.data.meta.total_rows / this.nPageToGet);
                         this.archetypes = ['-- All --', '-- No Archetype --'];
                         this.store.cardsRaw = response.data.data;
                         this.store.cardsRaw.forEach((card)=>{
@@ -33,13 +42,14 @@
                                 this.archetypes.push(archetype);
                             }
                         });
-                     })
-                     .catch((error)=>{
+                    })
+                    .catch((error)=>{
                         console.error(`something went wrong :${error}`);
-                     }).then(()=>{
+                    })
+                    .then(()=>{
                         this.archetypes.sort();
                         this.nCardFound = this.store.cardsRaw.length;
-                     })
+                    })
 
             },
             setArchetype(archetype){
@@ -51,7 +61,7 @@
                 this.nCardFound = (this.archetypeSelected === '') ? this.store.cardsRaw.length : cards.length;
             },
             setPage(direction){
-                this.nPage += (direction === 'prev') ? -1 : 1;;
+                this.nPage += (direction === 'prev') ? (this.nPage === 0) ? this.nMaxPage : -1 : (this.nPage === this.nMaxPage) ? -this.nMaxPage : 1;
                 this.getData();
             }
         },
