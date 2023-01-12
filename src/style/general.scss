@@ -20,6 +20,7 @@ body{
 
 //button
 button{
+    cursor: pointer;
     border: 2px solid $main-button-border;
     background-color: $main-button-bg;
     color:white;
