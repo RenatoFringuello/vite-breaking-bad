@@ -14,10 +14,9 @@
                 apiUrl: "https://db.ygoprodeck.com/api/v7/cardinfo.php",
                 nPage: 0,
                 nPageToGet: 25,
-                // nMaxPage : 0,
                 nCardFound: 0,
-                // archetypes:['-- All --', '-- No Archetype --'],
-                // archetypeSelected:'',
+                archetypes:['-- All --', 'Alien', 'Laval', 'Vylon', 'Inzektor', 'Umi', 'Gusto'],
+                archetypeSelected:undefined,
             };
         },
         methods: {
@@ -25,46 +24,22 @@
                 axios.get(this.apiUrl, {
                     params: {
                         sort: "name",
+                        archetype : this.archetypeSelected,
                         num: this.nPageToGet,
                         offset: this.nPageToGet * this.nPage
                     }
                 })
-                    .then((response) => {
-                    // this.nMaxPage = Math.floor(response.data.meta.total_rows / this.nPageToGet);
-                    // // da rimuovere
-                    // this.archetypes = ['-- All --', '-- No Archetype --'];
+                .then((response) => {
                     this.store.cardsRaw = response.data.data;
-                    // //replace this with a real getArchetypes
-                    // this.store.cardsRaw.forEach((card)=>{
-                    //     let archetype = card.archetype;
-                    //     if(archetype === undefined){
-                    //         archetype = this.archetypes[1];
-                    //     }
-                    //     if(!this.archetypes.includes(archetype)){
-                    //         this.archetypes.push(archetype);
-                    //     }
-                    // });
                 })
-                    .catch((error) => {
+                .catch((error) => {
                     console.error(`something went wrong :${error}`);
                 })
-                    .then(() => {
-                    // this.archetypes.sort();
+                .then(() => {
                     this.nCardFound = this.store.cardsRaw.length;
+                    console.log(this.store.cardsRaw);
                 });
             },
-            // setArchetype(archetype){
-            //     //set archetype to undefined if '-- none --' or empty string if '-- all --'
-            //     this.archetypeSelected = (archetype === this.archetypes[1]) ? undefined : (archetype === this.archetypes[0]) ? '' : archetype;
-            //     // filter by archetype to get the number 
-            //     const cards = this.store.cardsRaw.filter(card => (card.archetype === this.archetypeSelected));
-            //     //set the number to max if '-- all --' selected
-            //     this.nCardFound = (this.archetypeSelected === '') ? this.store.cardsRaw.length : cards.length;
-            // },
-            // setPage(direction){
-            //     this.nPage += (direction === 'prev') ? (this.nPage === 0) ? this.nMaxPage : -1 : (this.nPage === this.nMaxPage) ? -this.nMaxPage : 1;
-            //     this.getData();
-            // }
         },
         created() {
             this.getData();
@@ -76,20 +51,14 @@
     <main>
         <div class="container">
             <div class="select-container">
-                <select>
-                    <option v-for="archetype in archetypes" :value="archetype"
-                            @change="setArchetype(archetype)">{{ archetype }}</option>
+                <select v-model="archetypeSelected" @change="getData()">
+                    <option v-for="archetype,i in archetypes" :value="(i===0) ? undefined : archetype">{{ archetype }}</option>
                 </select>
-                <!-- <div class="set-page-container">
-                    <button @click="setPage('prev')">Prev</button>
-                    <span>{{ nPage }}</span>
-                    <button @click="setPage('next')">Next</button>
-                </div> -->
             </div>
             <section>
                 <h4>Found {{ nCardFound }} cards</h4>
                 <!-- list -->
-                <AppMainCardsList />
+                <AppMainCardsList :archetype="archetypeSelected"/>
             </section>
         </div>
     </main>
@@ -112,12 +81,6 @@
                 width: 150px;
                 padding: .5rem;
             }
-            // .set-page-container{
-            //     *{
-            //         margin-left: 1rem;
-            //     }
-                
-            // }
         }
         section{
             background-color: white;

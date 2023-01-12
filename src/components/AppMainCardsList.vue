@@ -6,12 +6,12 @@
         name:'AppMainCardsList',
         components:{
             AppMainCard,
-        },  
+        },
         data() {
             return {
                 store,
             }
-        },
+        }
     }
 </script>
 

@@ -1,11 +1,11 @@
 <script>
     export default {
-      name:'AppMainCard',
-      props:{
-        cardName: String,
-        cardArchetype: String,
-        cardImgSrc: String,
-      },
+        name:'AppMainCard',
+        props:{
+            cardName: String,
+            cardArchetype: String,
+            cardImgSrc: String,
+        }
     }
 </script>
 
