@@ -14,10 +14,10 @@
                 apiUrl : 'https://db.ygoprodeck.com/api/v7/cardinfo.php',
                 nPage:0,
                 nPageToGet:25,
-                nMaxPage : 0,
+                // nMaxPage : 0,
                 nCardFound : 0,
-                archetypes:['-- All --', '-- No Archetype --'],
-                archetypeSelected:'',
+                // archetypes:['-- All --', '-- No Archetype --'],
+                // archetypeSelected:'',
             }
         },
         methods: {
@@ -30,40 +30,43 @@
                         }
                     })
                     .then((response)=>{
-                        this.nMaxPage = Math.floor(response.data.meta.total_rows / this.nPageToGet);
-                        this.archetypes = ['-- All --', '-- No Archetype --'];
+                        // this.nMaxPage = Math.floor(response.data.meta.total_rows / this.nPageToGet);
+                        // // da rimuovere
+                        // this.archetypes = ['-- All --', '-- No Archetype --'];
                         this.store.cardsRaw = response.data.data;
-                        this.store.cardsRaw.forEach((card)=>{
-                            let archetype = card.archetype;
-                            if(archetype === undefined){
-                                archetype = this.archetypes[1];
-                            }
-                            if(!this.archetypes.includes(archetype)){
-                                this.archetypes.push(archetype);
-                            }
-                        });
+
+                        // //replace this with a real getArchetypes
+                        // this.store.cardsRaw.forEach((card)=>{
+                        //     let archetype = card.archetype;
+                        //     if(archetype === undefined){
+                        //         archetype = this.archetypes[1];
+                        //     }
+                        //     if(!this.archetypes.includes(archetype)){
+                        //         this.archetypes.push(archetype);
+                        //     }
+                        // });
                     })
                     .catch((error)=>{
                         console.error(`something went wrong :${error}`);
                     })
                     .then(()=>{
-                        this.archetypes.sort();
+                        // this.archetypes.sort();
                         this.nCardFound = this.store.cardsRaw.length;
                     })
 
             },
-            setArchetype(archetype){
-                //set archetype to undefined if '-- none --' or empty string if '-- all --'
-                this.archetypeSelected = (archetype === this.archetypes[1]) ? undefined : (archetype === this.archetypes[0]) ? '' : archetype;
-                // filter by archetype to get the number 
-                const cards = this.store.cardsRaw.filter(card => (card.archetype === this.archetypeSelected));
-                //set the number to max if '-- all --' selected
-                this.nCardFound = (this.archetypeSelected === '') ? this.store.cardsRaw.length : cards.length;
-            },
-            setPage(direction){
-                this.nPage += (direction === 'prev') ? (this.nPage === 0) ? this.nMaxPage : -1 : (this.nPage === this.nMaxPage) ? -this.nMaxPage : 1;
-                this.getData();
-            }
+            // setArchetype(archetype){
+            //     //set archetype to undefined if '-- none --' or empty string if '-- all --'
+            //     this.archetypeSelected = (archetype === this.archetypes[1]) ? undefined : (archetype === this.archetypes[0]) ? '' : archetype;
+            //     // filter by archetype to get the number 
+            //     const cards = this.store.cardsRaw.filter(card => (card.archetype === this.archetypeSelected));
+            //     //set the number to max if '-- all --' selected
+            //     this.nCardFound = (this.archetypeSelected === '') ? this.store.cardsRaw.length : cards.length;
+            // },
+            // setPage(direction){
+            //     this.nPage += (direction === 'prev') ? (this.nPage === 0) ? this.nMaxPage : -1 : (this.nPage === this.nMaxPage) ? -this.nMaxPage : 1;
+            //     this.getData();
+            // }
         },
         created(){
             this.getData();
@@ -77,21 +80,19 @@
             <div class="select-container">
                 <select>
                     <option v-for="archetype in archetypes" :value="archetype"
-                            @click="setArchetype(archetype)"
-                            @keyup.Enter="setArchetype(archetype)">{{ archetype }}</option>
+                            @change="setArchetype(archetype)">{{ archetype }}</option>
                 </select>
-                <div class="set-page-container">
+                <!-- <div class="set-page-container">
                     <button @click="setPage('prev')">Prev</button>
                     <span>{{ nPage }}</span>
                     <button @click="setPage('next')">Next</button>
-                </div>
+                </div> -->
             </div>
             <section>
                 <h4>Found {{ nCardFound }} cards</h4>
                 <div class="cards-container">
                     <AppMainCard 
                         v-for="card in store.cardsRaw"
-                        v-show="archetypeSelected === card.archetype || archetypeSelected === ''"
                         :cardName="card.name"
                         :cardArchetype="card.archetype"
                         :cardImgSrc="card.card_images[0].image_url"/>
