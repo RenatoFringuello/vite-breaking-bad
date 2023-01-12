@@ -1,6 +1,4 @@
 <script>
-    import axios from 'axios'
-    import {store} from '../store.js'
     import AppMainCardsList from './AppMainCardsList.vue'
 
     export default {
@@ -8,42 +6,15 @@
         components: { 
             AppMainCardsList, 
         },
+        props:{
+            nCardFound:Number,
+        },
         data() {
             return {
-                store,
-                apiUrl: "https://db.ygoprodeck.com/api/v7/cardinfo.php",
-                nPage: 0,
-                nPageToGet: 25,
-                nCardFound: 0,
                 archetypes:['-- All --', 'Alien', 'Laval', 'Vylon', 'Inzektor', 'Umi', 'Gusto'],
                 archetypeSelected:undefined,
             };
-        },
-        methods: {
-            getData() {
-                axios.get(this.apiUrl, {
-                    params: {
-                        sort: "name",
-                        archetype : this.archetypeSelected,
-                        num: this.nPageToGet,
-                        offset: this.nPageToGet * this.nPage
-                    }
-                })
-                .then((response) => {
-                    this.store.cardsRaw = response.data.data;
-                })
-                .catch((error) => {
-                    console.error(`something went wrong :${error}`);
-                })
-                .then(() => {
-                    this.nCardFound = this.store.cardsRaw.length;
-                    console.log(this.store.cardsRaw);
-                });
-            },
-        },
-        created() {
-            this.getData();
-        },
+        }
     }
 </script>
 
@@ -51,7 +22,7 @@
     <main>
         <div class="container">
             <div class="select-container">
-                <select v-model="archetypeSelected" @change="getData()">
+                <select v-model="archetypeSelected" @change="$emit('filterData', archetypeSelected)">
                     <option v-for="archetype,i in archetypes" :value="(i===0) ? undefined : archetype">{{ archetype }}</option>
                 </select>
             </div>
