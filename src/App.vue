@@ -15,7 +15,7 @@
         apiUrl: "https://db.ygoprodeck.com/api/v7/cardinfo.php",
         nPage: 0,
         nMaxPage: 0,
-        nPageToGet: 10,
+        nPageToGet: 25,
         nCardFound: 0,
         archetypeSelected:undefined,
       }
@@ -54,7 +54,7 @@
       }
     },
     created() {
-      this.getData(undefined);
+      this.getData();
     },
   }
 </script>
